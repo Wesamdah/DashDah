@@ -26,7 +26,7 @@ export default function Login() {
 
   return (
     <div className="flex h-screen w-screen overflow-hidden">
-      <div className="relative flex h-screen w-[60%] flex-col rounded-r-2xl bg-[#fff2f2] p-8">
+      <div className="relative hidden h-screen w-[60%] flex-col rounded-r-2xl bg-[#fff2f2] p-8 lg:flex">
         <h1 className="heading">
           Share <br /> valuable resources
         </h1>
@@ -37,12 +37,12 @@ export default function Login() {
         <div className="scale-125 self-end p-10">
           <img src={backgroud} alt="" />
         </div>
-        <div className="absolute left-0">
+        <div className="absolute left-0 hidden xl:block">
           <img src={line} alt="" />
         </div>
       </div>
 
-      <div className="animate-swipe-up flex h-screen w-[40%] flex-col items-center gap-8 p-8">
+      <div className="animate-swipe-up flex h-screen w-full flex-col items-center gap-8 p-8 lg:w-[40%]">
         <h1 className="text-[#6F4D58]">DashDah.</h1>
         <div className="space-y-6 text-center">
           <h2 className="heading">Sign In</h2>

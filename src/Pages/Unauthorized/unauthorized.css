@@ -1,0 +1,22 @@
+@font-face {
+  font-family: "clashGrotesk";
+  src: url("/assets/fonts/ClashGrotesk/ClashGrotesk-Bold.woff") format("woff");
+  font-weight: 900;
+}
+
+@font-face {
+  font-family: "clashGrotesk";
+  src: url("/assets/fonts/ClashGrotesk/ClashGrotesk-Medium.woff") format("woff");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "clashGrotesk";
+  src: url("/assets/fonts/ClashGrotesk/ClashGrotesk-Light.woff") format("woff");
+  font-weight: 300;
+}
+
+.not-found-container {
+  font-family: "clashGrotesk";
+  background-color: #fdf7f2;
+}

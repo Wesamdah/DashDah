@@ -6,8 +6,13 @@ import Auth from "./Components/Auth";
 import Login from "./Pages/Login/Login";
 import SignUp from "./Pages/SignUp/SignUp";
 import ForgetPasswor from "./Pages/ForgetPassword/ForgetPasswor";
+import Unauthorized from "./Pages/Unauthorized/Unauthorized";
 
 const routes = createBrowserRouter([
+  {
+    path: "*",
+    element: <Unauthorized />,
+  },
   {
     path: "/auth",
     element: <Auth />,

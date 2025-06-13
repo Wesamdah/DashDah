@@ -5,7 +5,7 @@ export interface InputType {
   id: string;
 }
 
-export interface SiginData {
+export interface SigupData {
   email: string;
   fullName: string;
   password: String;
@@ -21,6 +21,7 @@ export interface LoginData {
 
 export interface ForgetPasswordData {
   email: string;
+  otp: Array<string>;
   password: string;
   ConfirmNewPassword: string;
 }

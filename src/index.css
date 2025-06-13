@@ -1,6 +1,16 @@
 @import url("https://fonts.googleapis.com/css2?family=Sen:wght@400..800&display=swap");
 @import "tailwindcss";
 
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
 @theme {
   --animate-swipe-up: swipe-up 1s ease-in-out forwards;
   @keyframes swipe-up {
@@ -9,6 +19,20 @@
     }
     100% {
       transform: translateY(0px);
+    }
+  }
+}
+
+@theme {
+  --animate-otp-swipe-up: otp-swipe-up 1s ease-in-out forwards;
+  @keyframes otp-swipe-up {
+    0% {
+      opacity: 0;
+      transform: translateX(-1000px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0px);
     }
   }
 }

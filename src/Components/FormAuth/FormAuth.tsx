@@ -52,7 +52,7 @@ export default function FormAuth<T>({
 
     if (userData.current) {
       // Merge with previous data if counter is set, else replace entirely
-      if (counter) {
+      if (setCount) {
         setData((prev) => ({ ...prev, ...userData.current }));
       } else {
         setData(userData.current);
