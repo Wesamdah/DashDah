@@ -116,7 +116,7 @@ export default function ForgetPasswor() {
         <div className="scale-125 self-end p-10">
           <img src={background} alt="" />
         </div>
-        <div className="absolute left-0">
+        <div className="absolute left-0 hidden xl:block">
           <img src={line} alt="" />
         </div>
       </div>
