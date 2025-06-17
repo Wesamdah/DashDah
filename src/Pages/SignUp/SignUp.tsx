@@ -1,23 +1,67 @@
 import { useState } from "react";
-import type { SigupData } from "../../types/type";
+import type { SigupData } from "../../types/auth";
 import FormOtp from "../../Components/FormOtp/FormOtp";
 import JoinForm from "./JoinForm";
 import ProfileSetupForm from "./ProfileSetupForm";
+import { instance } from "../../api/axiosInstance";
+import { useLoading } from "../../Context/LoadingContext";
+import { useNavigate } from "react-router-dom";
 // assets
 import backgroud from "../../assets/images/form_background_2.png";
 import line from "../../assets/images/distract_line.png";
 
 export default function Login() {
+  const navigate = useNavigate();
+
   const [data, setData] = useState<SigupData>({
     email: "",
     fullName: "",
     password: "",
-    ConfirmPassword: "",
-    userName: "",
-    profile: null,
+    confirmPassword: "",
+    username: "",
+    avatar: null,
   });
 
   const [count, setCount] = useState<number>(0);
+
+  const { setLoading } = useLoading();
+
+  const handleSignUp: (dataToSend: SigupData) => void = async (dataToSend) => {
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("email", dataToSend.email);
+      formData.append("fullName", dataToSend.fullName);
+      formData.append("password", dataToSend.password);
+      formData.append("confirmPassword", dataToSend.confirmPassword);
+      formData.append("username", dataToSend.username);
+
+      // فقط إذا كان هناك صورة مرفقة
+      if (dataToSend.avatar) {
+        formData.append("avatar", dataToSend.avatar);
+      }
+
+      const response = await instance.post("/auth/register", formData);
+      console.log(response.data);
+      setCount(count + 1);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  const handleOtp = async (dataToSend: { email: string; otp: string }) => {
+    setLoading(true);
+    try {
+      const response = await instance.post("/auth/verify-email", dataToSend);
+
+      console.log(response.data);
+      setLoading(false);
+      navigate("/auth/login");
+    } catch (error) {
+      setLoading(true);
+    }
+  };
 
   return (
     <div className="flex h-screen w-screen overflow-hidden">
@@ -28,13 +72,16 @@ export default function Login() {
         {count === 0 ? (
           <JoinForm setData={setData} setCount={setCount} />
         ) : count === 1 ? (
-          <ProfileSetupForm setData={setData} setCount={setCount} />
-        ) : (
-          <FormOtp<SigupData>
-            email={data.email}
+          <ProfileSetupForm
             setData={setData}
             setCount={setCount}
-            counter={2}
+            sendData={handleSignUp}
+          />
+        ) : (
+          <FormOtp
+            email={data.email}
+            setCount={setCount}
+            handleOtp={handleOtp}
           />
         )}
       </div>

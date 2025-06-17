@@ -1,40 +1,17 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Auth from "./Components/Auth";
-import Login from "./Pages/Login/Login";
-import SignUp from "./Pages/SignUp/SignUp";
-import ForgetPasswor from "./Pages/ForgetPassword/ForgetPasswor";
-import Unauthorized from "./Pages/Unauthorized/Unauthorized";
-
-const routes = createBrowserRouter([
-  {
-    path: "*",
-    element: <Unauthorized />,
-  },
-  {
-    path: "/auth",
-    element: <Auth />,
-    children: [
-      {
-        path: "login",
-        element: <Login />,
-      },
-      {
-        path: "signup",
-        element: <SignUp />,
-      },
-      {
-        path: "forgetpassword",
-        element: <ForgetPasswor />,
-      },
-    ],
-  },
-]);
+import { RouterProvider } from "react-router-dom";
+import { routes } from "./router/routes";
+import { LoadingProvider } from "./Context/LoadingContext";
+import { ErrorProvider } from "./Context/ErrorContext";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={routes} />
+    <LoadingProvider>
+      <ErrorProvider>
+        <RouterProvider router={routes} />
+      </ErrorProvider>
+    </LoadingProvider>
   </StrictMode>,
 );

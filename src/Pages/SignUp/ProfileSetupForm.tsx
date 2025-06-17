@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
-import type { SigupData, InputType } from "../../types/type";
+import type { SigupData } from "../../types/auth";
+import type { InputType } from "../../types/form";
 import FormAuth from "../../Components/FormAuth/FormAuth";
 import type { Dispatch, SetStateAction } from "react";
 
@@ -10,22 +11,27 @@ const inputs: Array<InputType> = [
       "/assets/images/mini_avatar/camer_icon.png",
     ],
     type: "file",
-    id: "profile",
+    id: "avatar",
   },
   {
     label: "UserName ",
     type: "text",
     placeholder: "Example Name",
-    id: "userName",
+    id: "username",
   },
 ];
 
 interface Props {
   setData: Dispatch<SetStateAction<SigupData>>;
   setCount: Dispatch<SetStateAction<number>>;
+  sendData: (dataToSend: SigupData) => void;
 }
 
-export default function ProfileSetupForm({ setData, setCount }: Props) {
+export default function ProfileSetupForm({
+  setData,
+  setCount,
+  sendData,
+}: Props) {
   return (
     <>
       <div className="flex cursor-pointer items-center justify-center self-start rounded-full bg-[#F6F6F6]">
@@ -43,8 +49,7 @@ export default function ProfileSetupForm({ setData, setCount }: Props) {
         inputs={inputs}
         btn="Set up profile"
         setData={setData}
-        setCount={setCount}
-        counter={2}
+        sendData={sendData}
       >
         <p className="text_para">Name should not be more than 15 characters</p>
       </FormAuth>

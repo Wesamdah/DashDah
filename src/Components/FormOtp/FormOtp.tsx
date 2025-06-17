@@ -1,4 +1,5 @@
 import {
+  useEffect,
   useRef,
   useState,
   type ChangeEvent,
@@ -8,19 +9,14 @@ import {
 } from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 
-interface Props<T> {
+interface Props {
   email: string;
-  setData: Dispatch<SetStateAction<T>>;
   setCount: Dispatch<SetStateAction<number>>;
-  counter?: number;
+  // counter?: number;
+  handleOtp: (dataToSend: { email: string; otp: string }) => void;
 }
 
-export default function FormOtp<T>({
-  email,
-  setData,
-  setCount,
-  counter,
-}: Props<T>) {
+export default function FormOtp({ email, setCount, handleOtp }: Props) {
   const otpInputs = Array(4)
     .fill(null)
     .map(() => useRef<HTMLInputElement>(null));
@@ -43,7 +39,6 @@ export default function FormOtp<T>({
     if (value && index < otpInputs.length - 1) {
       focusInput(index + 1);
     }
-    console.log(otpValues);
   };
 
   const handleKeyDown = (
@@ -66,16 +61,44 @@ export default function FormOtp<T>({
     }
   };
 
-  const handleSubmnit: (event: FormEvent) => void = (event) => {
-    event.preventDefault();
-    setData((prev) => ({
-      ...prev,
-      otp: otpValues,
-    }));
-    if (setCount && typeof counter === "number") {
-      setCount((prev) => (prev < counter ? prev + 1 : prev));
+  const handlePaste: (e: React.ClipboardEvent<HTMLInputElement>) => void = (
+    e,
+  ) => {
+    e.preventDefault();
+
+    const PasteData = e.clipboardData.getData("text").slice(0, 4);
+
+    const updatedData = [...otpValues];
+
+    for (let i = 0; i < PasteData.length; i++) {
+      updatedData[i] = PasteData[i];
+
+      if (otpInputs[i].current) {
+        otpInputs[i].current!.value = updatedData[i];
+      }
     }
+    setOtpValues(updatedData);
   };
+
+  const handleSubmit: (event: FormEvent) => void = (event) => {
+    event.preventDefault();
+
+    const dataToSend = {
+      otp: otpValues.join().replace(/,/g, ""),
+      email,
+    };
+
+    handleOtp(dataToSend);
+    console.log(dataToSend);
+  };
+
+  useEffect(() => {
+    const isComplete = otpValues.every((digit) => digit.length === 1);
+
+    if (isComplete) {
+      otpInputs[3].current?.blur();
+    }
+  }, [otpValues]);
 
   return (
     <div className="h-full w-full overflow-hidden">
@@ -132,7 +155,7 @@ export default function FormOtp<T>({
         <p className="text-lg font-semibold text-[#777]">{email}</p>
 
         <form
-          onSubmit={handleSubmnit}
+          onSubmit={handleSubmit}
           className="my-4 flex flex-col gap-5"
           id="otp"
         >
@@ -146,6 +169,7 @@ export default function FormOtp<T>({
                 onChange={(e) => handleInputChange(index, e)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
                 onClick={() => focusInput(index)}
+                onPaste={(e) => handlePaste(e)}
                 className="h-10 w-10 rounded-full border border-[#B87E8E] bg-[#F6F6F6] text-center text-xl focus:outline-none"
               />
             ))}

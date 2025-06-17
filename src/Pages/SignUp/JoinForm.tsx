@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import type { SigupData, InputType } from "../../types/type";
+import type { SigupData } from "../../types/auth";
+import type { InputType } from "../../types/form";
 import FormAuth from "../../Components/FormAuth/FormAuth";
 import type { Dispatch, SetStateAction } from "react";
 
@@ -37,7 +38,7 @@ const inputs: Array<InputType> = [
     label: "Confirm Password ",
     type: "password",
     placeholder: "********",
-    id: "ConfirmPassword",
+    id: "confirmPassword",
   },
 ];
 

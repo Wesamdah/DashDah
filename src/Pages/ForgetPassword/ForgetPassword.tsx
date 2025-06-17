@@ -1,13 +1,16 @@
 import FormAuth from "../../Components/FormAuth/FormAuth";
-import { Link } from "react-router-dom";
-import type { InputType, ForgetPasswordData } from "../../types/type";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import type { ForgetPasswordData } from "../../types/auth";
+import type { InputType } from "../../types/form";
 import FormOtp from "../../Components/FormOtp/FormOtp";
+import { instance } from "../../api/axiosInstance";
+import { useLoading } from "../../Context/LoadingContext";
 // assets
 import backgroud_1 from "../../assets/images/form_background.png";
 import backgroud_2 from "../../assets/images/form_background_2.png";
 import line from "../../assets/images/distract_line.png";
-import { useState } from "react";
-import { Icon } from "@iconify/react/dist/iconify.js";
 
 const firstForm: Array<InputType> = [
   {
@@ -23,25 +26,28 @@ const secondForm: Array<InputType> = [
     label: "New Password (6 or more characters) ",
     type: "password",
     placeholder: "********",
-    id: "password",
+    id: "newPassword",
   },
   {
     label: "Confirm New Password ",
     type: "password",
     placeholder: "********",
-    id: "ConfirmNewPassword",
+    id: "confirmPassword",
   },
 ];
 
-export default function ForgetPasswor() {
+export default function ForgetPassword() {
+  const navigate = useNavigate();
   const [data, setData] = useState<ForgetPasswordData>({
     email: "",
-    otp: [],
-    password: "",
-    ConfirmNewPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
 
   const [count, setCount] = useState<number>(0);
+  const { setLoading } = useLoading();
+
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const formInputs = count === 0 ? firstForm : secondForm;
 
@@ -56,6 +62,43 @@ export default function ForgetPasswor() {
         Enter and confirm your new password <br /> to reset your credentials
       </>
     );
+
+  const handleEmail: (dataToSend: { email: String }) => void = async (
+    dataToSend,
+  ) => {
+    setLoading(true);
+    try {
+      const response = await instance.post("/auth/forget-password", dataToSend);
+      setCount(count + 1);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  const handleOtp = async (dataToSend: { email: string; otp: string }) => {
+    setLoading(true);
+    try {
+      const response = await instance.post("/auth/verify-otp", dataToSend);
+      setCount((prev) => prev + 1);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  const handlePassword: (dataToSend: ForgetPasswordData) => void = async (
+    dataToSend,
+  ) => {
+    setLoading(true);
+    try {
+      const response = await instance.patch("/auth/reset-password", dataToSend);
+      setLoading(false);
+      navigate("/auth/login");
+    } catch (error) {
+      setLoading(false);
+    }
+  };
 
   const btnContent =
     count === 0 ? (
@@ -72,16 +115,10 @@ export default function ForgetPasswor() {
 
   const content =
     count === 1 ? (
-      <FormOtp<ForgetPasswordData>
-        email={data.email}
-        setData={setData}
-        setCount={setCount}
-        counter={2}
-      />
+      <FormOtp email={data.email} setCount={setCount} handleOtp={handleOtp} />
     ) : (
       <>
         <h1 className="text-[#6F4D58]">DashDah.</h1>
-
         <div className="space-y-6 text-center">
           <h2 className="heading">Forgot your password</h2>
           <p className="text_para">{description}</p>
@@ -91,8 +128,8 @@ export default function ForgetPasswor() {
           inputs={formInputs}
           btn={btnContent}
           setData={setData}
-          setCount={setCount}
           counter={2}
+          sendData={count === 0 ? handleEmail : handlePassword}
         />
 
         <p className="text-sm text-[#5C5C5C] select-none">
@@ -102,6 +139,21 @@ export default function ForgetPasswor() {
         </p>
       </>
     );
+
+  useEffect(() => {
+    const container = containerRef.current;
+
+    if (!container) return;
+
+    container.classList.remove("animate-swipe-up");
+
+    // recalculate the pixels of the div ,
+    // so that will tell the dom we created a new div cuz you calcalt the width and highet and the pixles
+    // so when i add the animation to the new div it gonna run
+    void container.offsetWidth;
+
+    container.classList.add("animate-swipe-up");
+  }, [count]);
 
   return (
     <div className="relative flex h-screen w-screen overflow-hidden">
@@ -122,8 +174,8 @@ export default function ForgetPasswor() {
       </div>
       {/* // re-trigger animation on count change */}
       <div
+        ref={containerRef}
         className={`animate-swipe-up h-screen w-full lg:w-[40%] ${count !== 1 && "flex flex-col items-center gap-8 p-8"} `}
-        key={count}
       >
         {content}
       </div>

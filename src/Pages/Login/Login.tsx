@@ -1,7 +1,10 @@
 import { useState } from "react";
 import FormAuth from "../../Components/FormAuth/FormAuth";
-import type { InputType, LoginData } from "../../types/type";
+import type { LoginData } from "../../types/auth";
+import type { InputType } from "../../types/form";
 import { Link } from "react-router-dom";
+import { instance } from "../../api/axiosInstance";
+import { useLoading } from "../../Context/LoadingContext";
 // assets
 import backgroud from "../../assets/images/form_background.png";
 import line from "../../assets/images/distract_line.png";
@@ -23,6 +26,19 @@ const inputs: Array<InputType> = [
 
 export default function Login() {
   const [data, setData] = useState<LoginData>({ email: "", password: "" });
+
+  const { setLoading } = useLoading();
+
+  const handleLogin: (dataToSend: LoginData) => void = async (dataToSend) => {
+    setLoading(true);
+    try {
+      const response = await instance.post("/auth/login", dataToSend);
+      console.log(response.data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex h-screen w-screen overflow-hidden">
@@ -48,7 +64,12 @@ export default function Login() {
           <h2 className="heading">Sign In</h2>
           <p className="text_para">Sign in to get started</p>
         </div>
-        <FormAuth<LoginData> inputs={inputs} btn="Sign In" setData={setData}>
+        <FormAuth<LoginData>
+          inputs={inputs}
+          btn="Sign In"
+          setData={setData}
+          sendData={handleLogin}
+        >
           <p className="self-end font-semibold text-[#6A3851]">
             <Link to={"/auth/forgetpassword"}>Forgot Password?</Link>
           </p>
