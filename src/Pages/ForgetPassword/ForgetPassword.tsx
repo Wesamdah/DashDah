@@ -63,12 +63,12 @@ export default function ForgetPassword() {
       </>
     );
 
-  const handleEmail: (dataToSend: { email: String }) => void = async (
-    dataToSend,
-  ) => {
+  const handleEmail: () => void = async () => {
     setLoading(true);
     try {
-      const response = await instance.post("/auth/forget-password", dataToSend);
+      const response = await instance.post("/auth/forget-password", {
+        email: data.email,
+      });
       setCount(count + 1);
       setLoading(false);
     } catch (error) {
@@ -87,12 +87,10 @@ export default function ForgetPassword() {
     }
   };
 
-  const handlePassword: (dataToSend: ForgetPasswordData) => void = async (
-    dataToSend,
-  ) => {
+  const handlePassword: () => void = async () => {
     setLoading(true);
     try {
-      const response = await instance.patch("/auth/reset-password", dataToSend);
+      const response = await instance.patch("/auth/reset-password", data);
       setLoading(false);
       navigate("/auth/login");
     } catch (error) {

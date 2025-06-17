@@ -24,7 +24,7 @@ const inputs: Array<InputType> = [
 interface Props {
   setData: Dispatch<SetStateAction<SigupData>>;
   setCount: Dispatch<SetStateAction<number>>;
-  sendData: (dataToSend: SigupData) => void;
+  sendData: () => void;
 }
 
 export default function ProfileSetupForm({

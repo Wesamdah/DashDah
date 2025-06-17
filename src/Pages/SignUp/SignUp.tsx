@@ -26,19 +26,20 @@ export default function Login() {
 
   const { setLoading } = useLoading();
 
-  const handleSignUp: (dataToSend: SigupData) => void = async (dataToSend) => {
+  // const handleSignUp: (dataToSend: SigupData) => void = async (dataToSend) => {
+  const handleSignUp: () => void = async () => {
     setLoading(true);
     try {
       const formData = new FormData();
-      formData.append("email", dataToSend.email);
-      formData.append("fullName", dataToSend.fullName);
-      formData.append("password", dataToSend.password);
-      formData.append("confirmPassword", dataToSend.confirmPassword);
-      formData.append("username", dataToSend.username);
+      formData.append("email", data.email);
+      formData.append("fullName", data.fullName);
+      formData.append("password", data.password);
+      formData.append("confirmPassword", data.confirmPassword);
+      formData.append("username", data.username);
 
       // فقط إذا كان هناك صورة مرفقة
-      if (dataToSend.avatar) {
-        formData.append("avatar", dataToSend.avatar);
+      if (data.avatar) {
+        formData.append("avatar", data.avatar);
       }
 
       const response = await instance.post("/auth/register", formData);
@@ -59,7 +60,7 @@ export default function Login() {
       setLoading(false);
       navigate("/auth/login");
     } catch (error) {
-      setLoading(true);
+      setLoading(false);
     }
   };
 

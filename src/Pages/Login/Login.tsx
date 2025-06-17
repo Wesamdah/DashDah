@@ -29,11 +29,10 @@ export default function Login() {
 
   const { setLoading } = useLoading();
 
-  const handleLogin: (dataToSend: LoginData) => void = async (dataToSend) => {
+  const handleLogin: () => void = async () => {
     setLoading(true);
     try {
-      const response = await instance.post("/auth/login", dataToSend);
-      console.log(response.data);
+      const response = await instance.post("/auth/login", data);
       setLoading(false);
     } catch (error) {
       setLoading(false);

@@ -12,7 +12,6 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 interface Props {
   email: string;
   setCount: Dispatch<SetStateAction<number>>;
-  // counter?: number;
   handleOtp: (dataToSend: { email: string; otp: string }) => void;
 }
 
@@ -82,14 +81,11 @@ export default function FormOtp({ email, setCount, handleOtp }: Props) {
 
   const handleSubmit: (event: FormEvent) => void = (event) => {
     event.preventDefault();
-
     const dataToSend = {
       otp: otpValues.join().replace(/,/g, ""),
       email,
     };
-
     handleOtp(dataToSend);
-    console.log(dataToSend);
   };
 
   useEffect(() => {

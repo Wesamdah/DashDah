@@ -18,7 +18,7 @@ interface Props<T> {
   btn: string | JSX.Element;
   children?: ReactNode;
   setData: Dispatch<SetStateAction<T>>;
-  sendData?: (dataToSend: T) => void;
+  sendData?: () => void;
   setCount?: Dispatch<SetStateAction<number>>;
   counter?: number;
 }
@@ -33,7 +33,6 @@ export default function FormAuth<T>({
   counter,
 }: Props<T>) {
   const [userImage, setUserImage] = useState<string | null>(null);
-  const [userData, setUserData] = useState<Partial<T>>({});
 
   const { loading } = useLoading();
 
@@ -44,7 +43,7 @@ export default function FormAuth<T>({
 
     const newVale = files ? files[0] : value;
 
-    setUserData((prev) => ({ ...prev, [id]: newVale }));
+    setData((prev) => ({ ...prev, [id]: newVale }));
 
     if (files && files[0]) {
       setUserImage(URL.createObjectURL(files[0]));
@@ -53,11 +52,8 @@ export default function FormAuth<T>({
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    setData((prev) => {
-      const full_data = { ...prev, ...userData } as T;
-      if (sendData) sendData(full_data);
-      return full_data;
-    });
+
+    if (sendData) sendData();
 
     if (setCount && typeof counter === "number") {
       setCount((prev) => (prev < counter ? prev + 1 : prev));
